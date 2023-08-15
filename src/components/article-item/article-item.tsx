@@ -1,8 +1,20 @@
 import styles from './article-item.module.scss'
 import {HeartOutlined} from "@ant-design/icons";
-import rectangleImage from './Rectangle 1.png';
+import {Article, Author} from "../../redux/types.ts";
+import { nanoid } from 'nanoid';
 
-function articleItem() {
+interface ArticleItemProps {
+    articles: Article;
+    author: Author;
+}
+
+function formatDate(dateString:number) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('en-US', options);
+}
+
+
+function ArticleItem({articles}: ArticleItemProps) {
     const {
         article,
         articleTitleBlock,
@@ -19,40 +31,40 @@ function articleItem() {
         articleDate,
         articleTitleAndAuthor,
         aritcleAuthorContent,
+        articleUserPhoto,
     } = styles;
     return (
         <div className={article}>
             <div className={articleTitleAndAuthor}>
                 <div className={articleTitleBlock}>
-                    <h1 className={articleTitle}>Some article title</h1>
+                    <h1 className={articleTitle}>{articles.title}</h1>
                     <div className={aritcleLikes}>
                         <HeartOutlined/>
-                        <span className={articleLikesCount}>32</span>
+                        <span className={articleLikesCount}>{articles.favoritesCount}</span>
                     </div>
                 </div>
                 <div className={aritcleAuthor}>
                     <div className={aritcleAuthorContent}>
-                        <p className={articleName}>John Doe</p>
-                        <p className={articleDate}>March 5, 2020</p>
+                        <p className={articleName}>{articles.author.username}</p>
+                        <p className={articleDate}>{formatDate(articles.createdAt)}</p>
                     </div>
                     <div className={articlePhoto}>
-                        <img src={rectangleImage} alt=""/>
+                        <img src={articles.author.image} alt="User Avater" className={articleUserPhoto}/>
                     </div>
                 </div>
             </div>
             <div className={articleTag}>
-                <button className={articleTagButton}>Tag1</button>
+                {articles.tagList && articles.tagList.map((tag) => {
+                    return <button className={articleTagButton} key={nanoid()}>{tag}</button>
+                })}
             </div>
             <div className={articleTextBlock}>
                 <p className={articleText}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco
-                    laboris nisi ut aliquip ex ea commodo consequat.
+                    {articles.description}
                 </p>
             </div>
         </div>
     )
 }
 
-export default articleItem;
+export default ArticleItem;

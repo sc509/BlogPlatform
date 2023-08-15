@@ -35,6 +35,9 @@
   margin-left: 16px;
   margin-top: -20px;
 }
+.articleTag > button:not(:first-child) {
+  margin-left: 5px;
+}
 .articleTagButton{
   background-color: #FFFFFF;
   border: 1px solid black;
@@ -70,4 +73,9 @@
   line-height: 22px;
   font-weight: 400;
   color: rgba(0, 0, 0, 0.75);
+}
+.articleUserPhoto{
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
 }
