@@ -3,6 +3,7 @@ import {useGetArticlesListQuery} from "../../redux/articleApi.tsx";
 import {useAppSelector, useAppDispatch} from "../../redux/store.ts";
 import {paginationSlice} from "../../redux/slice/pagination-slice.ts";
 import {useEffect} from "react";
+import Paginations from "../pagination/paginations.tsx";
 
 function ArticleList() {
     const currentPage = useAppSelector(state => state.pagination.currentPage);
@@ -31,6 +32,7 @@ function ArticleList() {
                     const customKey = `${article.createdAt}-${article.title}`;
                     return <ArticleItem key={customKey} articles={article} />
                 })}
+                <Paginations/>
             </div>
         );
     }

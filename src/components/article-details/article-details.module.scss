@@ -1,0 +1,86 @@
+.articlesSingle {
+  width: 938px;
+  height: 807px;
+  box-shadow: 0px 4px 12px 0px #00000026;
+  background: rgba(255, 255, 255, 1);
+  margin: 0 auto;
+  margin-top: 24px;
+
+  &TextAndLikes {
+    display: flex;
+  }
+
+  &Text {
+    text-align: left;
+    margin-left: 16px;
+    margin-top: 15px;
+    font-size: 20px;
+    line-height: 28px;
+    color: rgba(24, 144, 255, 1);
+    font-weight: 400;
+  }
+
+  &LikesCount {
+    margin-top: 18px;
+    margin-left: 13px;
+  }
+  &Likes{
+    margin-left: 5px;
+  }
+  &Tag{
+    text-align: left;
+    margin-left: 16px;
+    &Button{
+      color: rgba(0, 0, 0, 0.5);
+      background-color: #FFFFFF;
+      border: 1px solid rgba(0, 0, 0, 0.5);
+      border-radius: 5px;
+      &:not(:first-child) {
+        margin-left: 5px;
+      }
+    }
+  }
+  &Author{
+    margin-top: 15px;
+    margin-right: 14px;
+    display: flex;
+    &Content{
+      margin-right: 12px;
+    }
+  }
+  &Name{
+    font-size: 18px;
+    line-height: 28px;
+    font-weight: 400;
+  }
+  &Date{
+    font-size: 12px;
+    line-height: 22px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.5);
+  }
+  &UserPhoto{
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+  }
+  &LikesAndAuthor{
+    display: flex;
+    justify-content: space-between;
+  }
+  &Description{
+    text-align: left;
+    margin-left: 16px;
+    margin-top: 16px;
+    font-size: 12px;
+    line-height: 22px;
+    color: rgba(0, 0, 0, 0.5);
+
+  }
+}
+.markDown{
+  text-align: left;
+  font-weight: 400;
+  margin-left: 16px;
+  margin-top: 20px;
+}

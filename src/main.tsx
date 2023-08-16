@@ -1,11 +1,14 @@
-import ReactDOM from 'react-dom/client'
-import App from './components/app/App.tsx'
-import './index.scss'
-import {Provider} from "react-redux";
-import {store} from "./redux/store.ts";
+import ReactDOM from 'react-dom/client';
+import App from './components/app/App.tsx';
+import './index.scss';
+import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from './redux/store.ts';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </Provider>
-)
+);

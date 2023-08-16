@@ -1,25 +1,27 @@
-import './App.scss'
-import Header from "../header/header.tsx";
-import ArticleList from "../article-list/article-list.tsx";
-import Paginations from "../pagination/paginations.tsx";
+import './App.scss';
+import Header from '../header/header.tsx';
+import ArticleList from '../article-list/article-list.tsx';
+import { Routes, Route } from 'react-router-dom';
+import SingleArticle from "../single-article/single-article.tsx";
 
 function App() {
-
   return (
     <>
       <header>
-          <Header/>
+        <Header />
       </header>
       <main>
         <section>
-            <ArticleList/>
+          <Routes>
+            <Route path="/" element={<ArticleList />} />
+            <Route path="/articles" element={<ArticleList />} />
+            <Route path="/articles/:slug" element={<SingleArticle />} />
+          </Routes>
         </section>
       </main>
-      <footer>
-          <Paginations/>
-      </footer>
+      <footer></footer>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
