@@ -4,6 +4,7 @@ const initialState = {
   currentPage: 1,
   articleCount:0,
 };
+
 export const paginationSlice = createSlice({
   name: 'Pagination',
   initialState,

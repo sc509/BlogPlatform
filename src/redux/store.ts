@@ -2,8 +2,12 @@ import {configureStore, combineReducers} from "@reduxjs/toolkit";
 import {articleApi} from "./articleApi.tsx";
 import {paginationReducer} from "./slice/pagination-slice.ts";
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
+import {authReducer} from "./slice/auth-slice.ts";
+import {userReducer} from "./slice/user-slice.ts";
 
 const rootReducer = combineReducers({
+    user: userReducer,
+    auth: authReducer,
     pagination: paginationReducer,
     [articleApi.reducerPath]: articleApi.reducer,
 });

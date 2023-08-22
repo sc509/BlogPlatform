@@ -33,7 +33,7 @@ function ArticleItem({ articles }: ArticleItemProps) {
     aritcleAuthorContent,
     articleUserPhoto,
   } = styles;
-  console.log(articles.slug)
+
   return (
     <div className={article}>
       <div className={articleTitleAndAuthor}>

@@ -1,7 +1,7 @@
-import styles from './header.module.scss';
+import styles from './header-unauthorized.module.scss';
 import { Link } from 'react-router-dom';
 
-function Header() {
+function HeaderUnauthorized() {
   const { header, title, blockTitle, signIn, signUp, authorization } = styles;
   return (
     <div className={header}>
@@ -11,11 +11,16 @@ function Header() {
         </h1>
       </div>
       <div className={authorization}>
-        <button className={signIn}>Sign In</button>
-        <button className={signUp}>Sign Up</button>
+        <Link to="/sign-in">
+          <button className={signIn}>Sign In</button>
+        </Link>
+
+        <Link to="/sign-up">
+          <button className={signUp}>Sign Up</button>
+        </Link>
       </div>
     </div>
   );
 }
 
-export default Header;
+export default HeaderUnauthorized;
