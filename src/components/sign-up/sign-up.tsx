@@ -2,7 +2,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import styles from './sign-up.module.scss';
 import {useCreateUserMutation} from "../../redux/articleApi.tsx";
 import {toast} from "react-toastify";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 interface SignUpForm {
   username: string;
@@ -13,6 +13,7 @@ interface SignUpForm {
 }
 
 function SignUp() {
+  const navigate = useNavigate();
   const [createUser, { isLoading, isError, error }] = useCreateUserMutation();
   const {
     register,
@@ -30,6 +31,7 @@ function SignUp() {
 
     if (response.data) {
       toast.success("You have successfully registered!");
+      navigate('/');
     } else if (error) {
       if (error.data && error.data.errors) {
         if (error.data.errors.email) {

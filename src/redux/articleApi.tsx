@@ -1,5 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { ArticlesResponse, EditUser, LoginUser, NewUser, UserResponse } from './types.ts';
+import {
+  Article,
+  ArticlesResponse,
+  CreateArticle,
+  DeleteArticle,
+  EditArticle,
+  EditUser,
+  LoginUser,
+  NewUser,
+  UserResponse,
+} from './types.ts';
 import Cookies from 'js-cookie';
 
 export const articleApi = createApi({
@@ -38,6 +48,44 @@ export const articleApi = createApi({
         body: { user: editUser },
       }),
     }),
+    createArticle: builder.mutation<Article, CreateArticle>({
+      query: (createArticle) => ({
+        url: '/articles ',
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+        body: { article: createArticle },
+      }),
+    }),
+    editArticle: builder.mutation<Article, EditArticle>({
+      query: (editArticle) => ({
+        url: `articles/${editArticle.slug}`,
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+        body: { article: editArticle },
+      }),
+    }),
+    deleteArticle: builder.mutation<DeleteArticle, string>({
+      query: (slug) => ({
+        url: `/articles/${slug} `,
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+      }),
+    }),
+    putLike: builder.mutation<Article, string>({
+      query: (slug) => ({
+        url: `/articles/${slug}/favorite `,
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+      }),
+    }),
   }),
 });
 
@@ -47,4 +95,8 @@ export const {
   useCreateUserMutation,
   useLoginUserMutation,
   useEditUserMutation,
+  useCreateArticleMutation,
+  useEditArticleMutation,
+  useDeleteArticleMutation,
+  usePutLikeMutation,
 } = articleApi;

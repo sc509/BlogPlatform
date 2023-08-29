@@ -28,10 +28,16 @@
   }
 }
 .aritcleLikes{
-  margin-top: 18px;
+  margin-top: 0px;
+  display: flex;
   margin-left: 13px;
+  &Icons{
+    margin-top: 21px;
+    cursor: pointer;
+  }
 }
 .articleLikesCount{
+  margin-top: 18px;
   margin-left: 5px;
 }
 .articleTag{
@@ -71,6 +77,9 @@
   text-align: left;
   margin-left: 16px;
   margin-top: 4px;
+  width: 628px;
+  height: auto;
+  overflow: hidden;
 }
 .articleText{
   font-size: 12px;

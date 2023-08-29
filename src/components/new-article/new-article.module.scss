@@ -1,0 +1,105 @@
+.newArticleForm {
+  margin: 0 auto;
+  margin-top: 59px;
+  width:938px;
+  height: auto;
+  background: linear-gradient(0deg, #FFFFFF, #FFFFFF),
+  linear-gradient(0deg, #D9D9D9, #D9D9D9);
+  border: 1px solid rgba(217, 217, 217, 1);
+  border-radius: 6px;
+
+  &Header {
+    margin-top: 48px;
+    font-size: 20px;
+    line-height: 28px;
+  }
+
+  &InputGroup {
+    text-align: left;
+    margin-top: 21px;
+    margin-left: 32px;
+
+    &Solo {
+      margin-bottom: 12px;
+    }
+
+    &Input {
+      width: 874px;
+      height: 40px;
+      border: 1px solid rgba(217, 217, 217, 1);
+      border-radius: 4px;
+      padding-left: 12px;
+      &Text{
+        width: 874px;
+        height: 192px;
+        padding-left: 12px;
+        padding-top: 7px;
+      }
+
+      &Error {
+        border: 1px solid rgba(245, 34, 45, 1);
+      }
+    }
+
+    &Error {
+      color: rgba(245, 34, 45, 1);
+      font-size: 14px;
+      line-height: 22px;
+      margin-top: 2px;
+    }
+  }
+
+  &MiniHeader {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 22px;
+    margin-bottom: 2px;
+  }
+  &Button{
+    text-align: left;
+    margin-left: 32px;
+    margin-top: 21px;
+    margin-bottom: 48px;
+  }
+  &Send{
+    width: 319px;
+    height: 40px;
+    background: rgba(24, 144, 255, 1);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    &Text{
+      color: rgba(255, 255, 255, 1);
+      line-height: 24px;
+      font-size: 16px;
+      font-weight: 400;
+    }
+  }
+}
+.makeTags{
+  display: block;
+}
+.tagsGroup{
+  &Input{
+    width: 300px;
+    height: 40px;
+    border: 1px solid rgba(217, 217, 217, 1);
+    border-radius: 4px;
+    padding-left: 12px;
+    margin-bottom: 4px;
+    margin-right: 17px;
+  }
+}
+
+.tagAdd{
+  &Button{
+    width: 136px;
+    height: 40px;
+    color: rgba(24, 144, 255, 1);
+    border: 1px solid rgba(24, 144, 255, 1)
+  }
+}
+.deleteTagButton{
+  width: 120px;
+  height: 40px;
+}

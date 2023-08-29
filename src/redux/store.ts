@@ -4,8 +4,10 @@ import {paginationReducer} from "./slice/pagination-slice.ts";
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 import {authReducer} from "./slice/auth-slice.ts";
 import {userReducer} from "./slice/user-slice.ts";
+import {articleReducer} from "./slice/article-slice.ts";
 
 const rootReducer = combineReducers({
+    article: articleReducer,
     user: userReducer,
     auth: authReducer,
     pagination: paginationReducer,

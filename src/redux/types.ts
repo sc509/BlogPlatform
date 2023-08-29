@@ -5,6 +5,7 @@ export interface Author {
 }
 
 export interface Article {
+    slug:string;
     title: string;
     tagList: string[] | number[];
     description: string;
@@ -60,4 +61,27 @@ export interface EditUser {
         password?: string,
         image?: string,
     }
+}
+
+export interface CreateArticle {
+    article:{
+        title: string,
+        description: string,
+        body: string,
+        tagList?: string[];
+    }
+}
+
+export interface EditArticle {
+    article:{
+        slug?:string,
+        title:string,
+        description: string,
+        body: string,
+        tagList?: string[];
+    }
+}
+
+export interface DeleteArticle {
+    slug?:string;
 }
