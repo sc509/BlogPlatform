@@ -10,7 +10,6 @@ function Paginations() {
   const totalCount = useAppSelector(state => state.pagination.articleCount)
   const dispatch = useAppDispatch();
 
-    console.log(currentPage)
   const handlePageChange = (page:number) =>{
       dispatch(setCurrentPage(page))
   };

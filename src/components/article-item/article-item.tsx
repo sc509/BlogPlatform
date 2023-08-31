@@ -1,11 +1,12 @@
 import styles from './article-item.module.scss';
 import { Article, Author } from '../../redux/types.ts';
 import { nanoid } from 'nanoid';
-import {Link, useParams} from 'react-router-dom';
+import {Link } from 'react-router-dom';
 import { useState } from 'react';
-import { useAppSelector } from '../../redux/store.ts';
+import {useAppDispatch, useAppSelector} from '../../redux/store.ts';
 import {toast} from "react-toastify";
-import {usePutLikeMutation} from "../../redux/articleApi.tsx";
+import {useDeleteLikeMutation, usePutLikeMutation} from "../../redux/articleApi.tsx";
+import {articleSlice} from "../../redux/slice/article-slice.ts";
 
 interface ArticleItemProps {
   articles: Article;
@@ -19,6 +20,7 @@ function formatDate(dateString: number) {
 }
 
 function ArticleItem({ articles, slug }: ArticleItemProps) {
+  console.log(articles)
   const HeartIcon = ({ fill }) => (
     <svg width="16" height="16" viewBox="0 0 24 24">
       <path
@@ -29,9 +31,12 @@ function ArticleItem({ articles, slug }: ArticleItemProps) {
       />
     </svg>
   );
-  const [isHeartClicked, setHeartClicked] = useState(false);
+  const [isHeartClicked, setHeartClicked] = useState(articles.favorited);
   const isUserLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+  const dispatch = useAppDispatch();
+  const { updateLikes } = articleSlice.actions;
   const [putLike, {error}] = usePutLikeMutation();
+  const [deleteLike, {error: deleteError}] = useDeleteLikeMutation();
   const {
     article,
     articleTitleBlock,
@@ -60,15 +65,22 @@ function ArticleItem({ articles, slug }: ArticleItemProps) {
             <Link to={`/articles/${articles.slug}`}>{articles.title}</Link>
           </h1>
           <div className={aritcleLikes}>
-            <div></div>
             <div
                 onClick={async () => {
                   if (isUserLoggedIn) {
                     setHeartClicked(!isHeartClicked);
                     try {
-                      await putLike(slug);
+                      let newCount;
+                      if (isHeartClicked) {
+                        const result = await deleteLike({ unFavoritedArticle: articles, slug: articles.slug });
+                        newCount = result.data.article.favoritesCount;
+                      } else {
+                        const result = await putLike({ favoritedArticle: articles, slug: articles.slug });
+                        newCount = result.data.article.favoritesCount;
+                      }
+                      dispatch(updateLikes({ slug: articles.slug, newCount }));
                     } catch (e) {
-                      console.error("Failed to put like", e);
+                      console.error("Failed to update like", e);
                     }
                   } else {
                     toast.error(`You must be logged in`);
@@ -84,7 +96,7 @@ function ArticleItem({ articles, slug }: ArticleItemProps) {
         </div>
         <div className={aritcleAuthor}>
           <div className={aritcleAuthorContent}>
-            <p className={articleName}>{articles.author.username}</p>
+            <p className={articleName}>{articles.author.username} lg</p>
             <p className={articleDate}>{formatDate(articles.createdAt)}</p>
           </div>
           <div className={articlePhoto}>

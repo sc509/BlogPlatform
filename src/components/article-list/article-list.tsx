@@ -14,7 +14,6 @@ function ArticleList() {
   const totalCount = response?.articlesCount;
   const { setArticleCount } = paginationSlice.actions;
   const dispatch = useAppDispatch();
-
   useEffect(() => {
     if (response?.articles) {
       dispatch(setArticles(response.articles));
@@ -23,7 +22,7 @@ function ArticleList() {
     if (totalCount) {
       dispatch(setArticleCount(totalCount));
     }
-  }, [response, totalCount, dispatch]);
+  }, [response, totalCount, dispatch ]);
 
   if (isLoading) {
     return <div>Loading...</div>;

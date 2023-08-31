@@ -19,10 +19,20 @@ export const articleApi = createApi({
   }),
   endpoints: (builder) => ({
     getArticlesList: builder.query<ArticlesResponse, { page: number }>({
-      query: ({ page }) => `articles?limit=5&offset=${(page - 1) * 5}`,
+      query: ({ page }) => ({
+        url: `articles?limit=5&offset=${(page - 1) * 5}`,
+        headers: {
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+      }),
     }),
     getArticleBySlug: builder.query<ArticlesResponse, string>({
-      query: (slug) => `articles/${slug}`,
+      query: (slug) => ({
+        url: `articles/${slug}`,
+        headers: {
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+      }),
     }),
     createUser: builder.mutation<UserResponse, NewUser>({
       query: (newUser) => ({
@@ -77,14 +87,25 @@ export const articleApi = createApi({
         },
       }),
     }),
-    putLike: builder.mutation<Article, string>({
-      query: (slug) => ({
-        url: `/articles/${slug}/favorite `,
+    putLike: builder.mutation<Article, { favoritedArticle: Article; slug: string }>({
+      query: ({ favoritedArticle, slug }) => ({
+        url: `/articles/${slug}/favorite`,
         method: 'POST',
         headers: {
           Authorization: `Bearer ${Cookies.get('token')}`,
         },
+        body: { article: favoritedArticle },
       }),
+    }),
+    deleteLike: builder.mutation<Article, { unFavoritedArticle: Article; slug: string }>({
+      query:({ unFavoritedArticle , slug }) => ({
+        url: `/articles/${slug}/favorite`,
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+        body: {article: unFavoritedArticle},
+      })
     }),
   }),
 });
@@ -99,4 +120,5 @@ export const {
   useEditArticleMutation,
   useDeleteArticleMutation,
   usePutLikeMutation,
+    useDeleteLikeMutation,
 } = articleApi;

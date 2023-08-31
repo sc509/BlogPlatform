@@ -1,7 +1,9 @@
-import { createSlice } from '@reduxjs/toolkit';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 const initialState = {
   articleList: [],
+  favoritesCounts:0,
+  likedArticles: {},
 };
 
 export const articleSlice = createSlice({
@@ -16,6 +18,12 @@ export const articleSlice = createSlice({
     },
     addArticleToStore: (state, action) => {
       state.articleList.unshift(action.payload);
+    },
+    updateLikes: (state, action: PayloadAction<{ slug: string, newCount: number }>) => {
+      const article = state.articleList.find(a => a.slug === action.payload.slug);
+      if (article) {
+        article.favoritesCount = action.payload.newCount;
+      }
     },
   },
 });

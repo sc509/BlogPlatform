@@ -8,8 +8,9 @@ import {useCreateArticleMutation} from "../../redux/articleApi.tsx";
 import {useNavigate} from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {useAppDispatch} from "../../redux/store.ts";
+import {useAppDispatch, useAppSelector} from "../../redux/store.ts";
 import {articleSlice} from "../../redux/slice/article-slice.ts";
+import {paginationSlice} from "../../redux/slice/pagination-slice.ts";
 
 const confirm = (e: React.MouseEvent<HTMLElement>) => {
   message.success('The tag has been successfully removed');
@@ -33,6 +34,8 @@ function NewArticle() {
   const [inputValue, setInputValue] = useState('');
   const [text, setText] = useState('');
   const dispatch = useAppDispatch();
+  const totalCount = useAppSelector((state) => state.pagination.articleCount);
+  const { setArticleCount } = paginationSlice.actions;
   const { addArticleToStore } = articleSlice.actions;
   const [createArticle, {error}] = useCreateArticleMutation();
   const addTag = (event) => {
@@ -61,8 +64,9 @@ function NewArticle() {
       });
       if (response) {
         toast.success("Статья успешно создана")
-        console.log(response.data.article);
-        dispatch(addArticleToStore(response.data.article));
+        dispatch(addArticleToStore(response.data.article))
+        dispatch(setArticleCount(totalCount + 1));
+        window.location.reload()
         navigate('/');
       }
     } catch (err) {

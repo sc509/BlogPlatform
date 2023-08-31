@@ -7,7 +7,6 @@ import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import {actions} from "../../redux/slice/auth-slice.ts";
 import {useAppDispatch} from "../../redux/store.ts";
-import {userActions} from "../../redux/slice/user-slice.ts";
 
 interface SignInForm {
   email: string;

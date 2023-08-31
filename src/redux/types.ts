@@ -9,6 +9,7 @@ export interface Article {
     title: string;
     tagList: string[] | number[];
     description: string;
+    favorited:boolean;
     favoritesCount: number;
     author: Author;
     createdAt:number;
