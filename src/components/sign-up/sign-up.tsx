@@ -14,7 +14,7 @@ interface SignUpForm {
 
 function SignUp() {
   const navigate = useNavigate();
-  const [createUser, { isLoading, isError, error }] = useCreateUserMutation();
+  const [createUser, { error }] = useCreateUserMutation();
   const {
     register,
     handleSubmit,
@@ -28,16 +28,21 @@ function SignUp() {
       email: data.email,
       password: data.password,
     });
-
+    // @ts-ignore
     if (response.data) {
       toast.success("You have successfully registered!");
       navigate('/');
     } else if (error) {
+      // @ts-ignore
       if (error.data && error.data.errors) {
+        // @ts-ignore
         if (error.data.errors.email) {
+          // @ts-ignore
           toast.error(`Email ${error.data.errors.email}`);
         }
+        // @ts-ignore
         if (error.data.errors.username) {
+          // @ts-ignore
           toast.error(`Username ${error.data.errors.username}`);
         }
       } else {

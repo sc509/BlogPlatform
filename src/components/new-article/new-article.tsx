@@ -1,16 +1,21 @@
-import styles from './new-article.module.scss';
-import { SubmitHandler, useForm } from 'react-hook-form';
 import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+
 import { nanoid } from 'nanoid';
-import { Button, message, Popconfirm, Space } from 'antd';
-import type { SizeType } from 'antd/es/config-provider/SizeContext';
-import {useCreateArticleMutation} from "../../redux/articleApi.tsx";
-import {useNavigate} from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {useAppDispatch, useAppSelector} from "../../redux/store.ts";
-import {articleSlice} from "../../redux/slice/article-slice.ts";
-import {paginationSlice} from "../../redux/slice/pagination-slice.ts";
+
+import styles from './new-article.module.scss';
+
+import { Button, message, Popconfirm, Space } from 'antd';
+import type { SizeType } from 'antd/es/config-provider/SizeContext';
+
+import { useNavigate } from 'react-router-dom';
+
+import { useAppDispatch, useAppSelector } from '../../redux/store.ts';
+import { useCreateArticleMutation } from "../../redux/articleApi.tsx";
+import { articleSlice } from "../../redux/slice/article-slice.ts";
+import { paginationSlice } from "../../redux/slice/pagination-slice.ts";
 
 const confirm = (e: React.MouseEvent<HTMLElement>) => {
   message.success('The tag has been successfully removed');
@@ -30,14 +35,14 @@ interface NewArticleForm {
 function NewArticle() {
   const [tags, setTags] = useState([]);
   const navigate = useNavigate();
-  const [size, setSize] = useState<SizeType>('large'); // default is 'middle'
+  const [size] = useState<SizeType>('large'); // default is 'middle'
   const [inputValue, setInputValue] = useState('');
   const [text, setText] = useState('');
   const dispatch = useAppDispatch();
   const totalCount = useAppSelector((state) => state.pagination.articleCount);
   const { setArticleCount } = paginationSlice.actions;
   const { addArticleToStore } = articleSlice.actions;
-  const [createArticle, {error}] = useCreateArticleMutation();
+  const [createArticle] = useCreateArticleMutation();
   const addTag = (event) => {
     if ((event.key === 'Enter' || event.type === 'click') && inputValue !== '') {
       setTags([...tags, inputValue]);
@@ -64,9 +69,9 @@ function NewArticle() {
       });
       if (response) {
         toast.success("Статья успешно создана")
+        // @ts-ignore
         dispatch(addArticleToStore(response.data.article))
         dispatch(setArticleCount(totalCount + 1));
-        window.location.reload()
         navigate('/');
       }
     } catch (err) {
@@ -137,8 +142,8 @@ function NewArticle() {
               placeholder="Text"
               value={text}
               onChange={(event) => setText(event.target.value)}
-              rows="4"
-              cols="50"
+              rows={4}
+              cols={50}
             ></textarea>
             {errors.textArticle && <p className={newArticleFormInputGroupError}>{errors.textArticle.message}</p>}
           </div>
@@ -149,7 +154,7 @@ function NewArticle() {
                 <div key={nanoid()} className={tagsGroup}>
                   <input
                       className={tagsGroupInput}
-                      {...register(`tags[${index}]`)}
+                      {...register(`tags.${index}`)}
                       type="text"
                       defaultValue={tag}
                   />

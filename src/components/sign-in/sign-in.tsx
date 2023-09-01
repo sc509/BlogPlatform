@@ -1,12 +1,14 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
-import styles from './sign.in.module.scss';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
+
 import { useLoginUserMutation } from '../../redux/articleApi.tsx';
+import { actions } from "../../redux/slice/auth-slice.ts";
+import { useAppDispatch } from "../../redux/store.ts";
+
 import Cookies from 'js-cookie';
-import { useNavigate } from 'react-router-dom';
-import {actions} from "../../redux/slice/auth-slice.ts";
-import {useAppDispatch} from "../../redux/store.ts";
+
+import styles from './sign.in.module.scss';
 
 interface SignInForm {
   email: string;
@@ -28,16 +30,23 @@ function SignIn() {
       email: data.email,
       password: data.password,
     });
+    // @ts-ignore
     if (response.data) {
+      // @ts-ignore
       Cookies.set('token', response.data.user.token);
+      // @ts-ignore
       Cookies.set('username', response.data.user.username);
+      // @ts-ignore
       Cookies.set('email', response.data.user.email )
       dispatch(actions.login());
       toast.success('Authorization was successful');
       navigate('/');
     } else if (error) {
+      // @ts-ignore
       if (error.data && error.data.errors) {
+        // @ts-ignore
         if (error.data.errors['email or password']) {
+          // @ts-ignore
           toast.error(`Email or Password ${error.data.errors['email or password']}`);
         }
       } else {

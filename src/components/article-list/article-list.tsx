@@ -34,7 +34,7 @@ function ArticleList() {
         {articlesFromStore &&
           articlesFromStore.map((article) => {
             const customKey = `${article.createdAt}-${article.title}`;
-            return <ArticleItem key={customKey} articles={article} slug={article.slug} />;
+            return <ArticleItem key={customKey} articles={article} author={article.author} slug={article.slug} />;
           })}
         <Paginations />
       </div>

@@ -1,42 +1,31 @@
-import styles from './article-item.module.scss';
-import { Article, Author } from '../../redux/types.ts';
-import { nanoid } from 'nanoid';
-import {Link } from 'react-router-dom';
 import { useState } from 'react';
-import {useAppDispatch, useAppSelector} from '../../redux/store.ts';
-import {toast} from "react-toastify";
-import {useDeleteLikeMutation, usePutLikeMutation} from "../../redux/articleApi.tsx";
-import {articleSlice} from "../../redux/slice/article-slice.ts";
+import { Link } from 'react-router-dom';
+import { nanoid } from 'nanoid';
+import { toast } from "react-toastify";
+
+import { Article, Author } from '../../redux/types.ts';
+import { useAppDispatch, useAppSelector } from '../../redux/store.ts';
+import { useDeleteLikeMutation, usePutLikeMutation } from "../../redux/articleApi.tsx";
+import { articleSlice } from "../../redux/slice/article-slice.ts";
+import formatDate from "../../Utils/form-date.ts";
+import HeartIcon from "../../Utils/HeartIcon.tsx";
+
+import styles from './article-item.module.scss';
 
 interface ArticleItemProps {
   articles: Article;
-  author: Author;
+  author?: Author;
   slug?: string;
 }
 
-function formatDate(dateString: number) {
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  return new Date(dateString).toLocaleDateString('en-US', options);
-}
 
-function ArticleItem({ articles, slug }: ArticleItemProps) {
-  console.log(articles)
-  const HeartIcon = ({ fill }) => (
-    <svg width="16" height="16" viewBox="0 0 24 24">
-      <path
-        fill={fill}
-        stroke="black"
-        strokeWidth="1"
-        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-      />
-    </svg>
-  );
+function ArticleItem({ articles, author, slug }: ArticleItemProps) {
   const [isHeartClicked, setHeartClicked] = useState(articles.favorited);
   const isUserLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
   const dispatch = useAppDispatch();
   const { updateLikes } = articleSlice.actions;
-  const [putLike, {error}] = usePutLikeMutation();
-  const [deleteLike, {error: deleteError}] = useDeleteLikeMutation();
+  const [putLike] = usePutLikeMutation();
+  const [deleteLike] = useDeleteLikeMutation();
   const {
     article,
     articleTitleBlock,
@@ -47,7 +36,7 @@ function ArticleItem({ articles, slug }: ArticleItemProps) {
     articleTagButton,
     articleTextBlock,
     articleText,
-    aritcleAuthor,
+    aritclesAuthors,
     articlePhoto,
     articleName,
     articleDate,
@@ -73,9 +62,11 @@ function ArticleItem({ articles, slug }: ArticleItemProps) {
                       let newCount;
                       if (isHeartClicked) {
                         const result = await deleteLike({ unFavoritedArticle: articles, slug: articles.slug });
+                        // @ts-ignore
                         newCount = result.data.article.favoritesCount;
                       } else {
                         const result = await putLike({ favoritedArticle: articles, slug: articles.slug });
+                        // @ts-ignore
                         newCount = result.data.article.favoritesCount;
                       }
                       dispatch(updateLikes({ slug: articles.slug, newCount }));
@@ -94,9 +85,9 @@ function ArticleItem({ articles, slug }: ArticleItemProps) {
             <div className={articleLikesCount}>{articles.favoritesCount}</div>
           </div>
         </div>
-        <div className={aritcleAuthor}>
+        <div className={aritclesAuthors}>
           <div className={aritcleAuthorContent}>
-            <p className={articleName}>{articles.author.username} lg</p>
+            <p className={articleName}>{articles.author.username}</p>
             <p className={articleDate}>{formatDate(articles.createdAt)}</p>
           </div>
           <div className={articlePhoto}>

@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import {
-  Article,
+  Article, ArticleResponse,
   ArticlesResponse,
   CreateArticle,
   DeleteArticle,
@@ -26,7 +26,7 @@ export const articleApi = createApi({
         },
       }),
     }),
-    getArticleBySlug: builder.query<ArticlesResponse, string>({
+    getArticleBySlug: builder.query<ArticleResponse, string>({
       query: (slug) => ({
         url: `articles/${slug}`,
         headers: {

@@ -1,10 +1,13 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
-import styles from './edit-profile.module.scss';
-import {useAppDispatch, useAppSelector} from '../../redux/store.ts';
-import {useEditUserMutation} from "../../redux/articleApi.tsx";
-import {toast} from "react-toastify";
+
+import { toast } from 'react-toastify';
 import Cookies from "js-cookie";
-import {userActions} from "../../redux/slice/user-slice.ts";
+
+import styles from './edit-profile.module.scss';
+
+import { useAppDispatch, useAppSelector } from '../../redux/store.ts';
+import { useEditUserMutation } from "../../redux/articleApi.tsx";
+import { userActions } from "../../redux/slice/user-slice.ts";
 
 interface EditProfileForm {
   username: string;
@@ -16,7 +19,7 @@ interface EditProfileForm {
 function EditProfile() {
   const userName = useAppSelector((state) => state.user.username);
   const email = useAppSelector((state) => state.user.email);
-  const [editUser, {error} ] = useEditUserMutation();
+  const [editUser ] = useEditUserMutation();
   const dispatch = useAppDispatch();
   const {
     register,
@@ -29,8 +32,11 @@ function EditProfile() {
       password: data.password,
       image: data.avatar,
     });
+    // @ts-ignore
     dispatch(userActions.setUserImage(response.data.user.image));
+    // @ts-ignore
     Cookies.set('url', response.data.user.image )
+    // @ts-ignore
     if (response.data){
       toast.success('The data has been changed');
     }
