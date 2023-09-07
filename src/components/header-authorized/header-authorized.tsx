@@ -4,6 +4,7 @@ import AccountPhoto from '../../assets/Rectangle 1.svg';
 import { useAppDispatch, useAppSelector } from '../../redux/store.ts';
 import { actions } from '../../redux/slice/auth-slice.ts';
 import { toast } from 'react-toastify';
+import handleImageError from "../../Utils/handleImageError.ts";
 
 function HeaderAuthorized() {
   const dispatch = useAppDispatch();
@@ -33,7 +34,7 @@ function HeaderAuthorized() {
         <Link to="/profile" className={link}>
           <div className={profile}>
             <p className={profileName}>{userName}</p>
-            <img src={image || AccountPhoto} alt="Account Photo" className={profilePhoto} />
+            <img src={image || AccountPhoto} onError={handleImageError} alt="Account Photo" className={profilePhoto} />
           </div>
         </Link>
         <button className={logOut} onClick={handleLogOut}>

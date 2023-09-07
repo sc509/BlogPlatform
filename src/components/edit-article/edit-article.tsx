@@ -34,7 +34,7 @@ interface ArticleEditProps {
 
 function EditArticle() {
   const { slug } = (useParams() as unknown) as ArticleEditProps;
-  const { data } = useGetArticleBySlugQuery(slug);
+  const { data, isLoading, isError } = useGetArticleBySlugQuery(slug); 
   const [tags, setTags] = useState(data ? data.article.tagList : []);
   const [size] = useState<SizeType>('large');
   const [inputValue, setInputValue] = useState('');
@@ -121,6 +121,14 @@ function EditArticle() {
     newArticleFormButton,
     newArticleFormSendText,
   } = styles;
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error loading data</div>;
+  }
+
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)} className={newArticleForm}>

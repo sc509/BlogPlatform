@@ -13,7 +13,7 @@ import type { SizeType } from 'antd/es/config-provider/SizeContext';
 import { useNavigate } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../../redux/store.ts';
-import { useCreateArticleMutation } from "../../redux/articleApi.tsx";
+import {useCreateArticleMutation, useGetArticlesListQuery} from "../../redux/articleApi.tsx";
 import { articleSlice } from "../../redux/slice/article-slice.ts";
 import { paginationSlice } from "../../redux/slice/pagination-slice.ts";
 
@@ -34,7 +34,10 @@ interface NewArticleForm {
 
 function NewArticle() {
   const [tags, setTags] = useState([]);
+  const currentPage = useAppSelector((state) => state.pagination.currentPage);
+  const articlesQuery = useGetArticlesListQuery({ page: currentPage });
   const navigate = useNavigate();
+  console.log(articlesQuery)
   const [size] = useState<SizeType>('large'); // default is 'middle'
   const [inputValue, setInputValue] = useState('');
   const [text, setText] = useState('');
@@ -72,6 +75,7 @@ function NewArticle() {
         // @ts-ignore
         dispatch(addArticleToStore(response.data.article))
         dispatch(setArticleCount(totalCount + 1));
+        articlesQuery.refetch();
         navigate('/');
       }
     } catch (err) {
