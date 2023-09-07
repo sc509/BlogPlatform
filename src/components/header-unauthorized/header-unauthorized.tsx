@@ -1,5 +1,6 @@
 import styles from './header-unauthorized.module.scss';
 import { Link } from 'react-router-dom';
+import ROUTES from "../../Utils/routes.ts";
 
 function HeaderUnauthorized() {
   const { header, title, blockTitle, signIn, signUp, authorization } = styles;
@@ -7,15 +8,15 @@ function HeaderUnauthorized() {
     <div className={header}>
       <div className={blockTitle}>
         <h1 className={title}>
-          <Link to="/articles">Realworld Blog</Link>
+          <Link to={ROUTES.HOME}>Realworld Blog</Link>
         </h1>
       </div>
       <div className={authorization}>
-        <Link to="/sign-in">
+        <Link to={ROUTES.SIGN_IN}>
           <button className={signIn}>Sign In</button>
         </Link>
 
-        <Link to="/sign-up">
+        <Link to={ROUTES.SIGN_UP}>
           <button className={signUp}>Sign Up</button>
         </Link>
       </div>

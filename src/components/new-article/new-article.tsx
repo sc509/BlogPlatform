@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm, useFieldArray } from 'react-hook-form';
 
-import { nanoid } from 'nanoid';
-import { toast } from 'react-toastify';
+  import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import styles from './new-article.module.scss';
@@ -13,9 +12,9 @@ import type { SizeType } from 'antd/es/config-provider/SizeContext';
 import { useNavigate } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../../redux/store.ts';
-import {useCreateArticleMutation, useGetArticlesListQuery} from "../../redux/articleApi.tsx";
-import { articleSlice } from "../../redux/slice/article-slice.ts";
-import { paginationSlice } from "../../redux/slice/pagination-slice.ts";
+import { useCreateArticleMutation, useGetArticlesListQuery } from '../../redux/articleApi.tsx';
+import { articleSlice } from '../../redux/slice/article-slice.ts';
+import { paginationSlice } from '../../redux/slice/pagination-slice.ts';
 
 const confirm = (e: React.MouseEvent<HTMLElement>) => {
   message.success('The tag has been successfully removed');
@@ -29,15 +28,13 @@ interface NewArticleForm {
   title: string;
   description: string;
   textArticle: string;
-  tags: string[];
+  tags: { value: string }[];
 }
 
 function NewArticle() {
-  const [tags, setTags] = useState([]);
   const currentPage = useAppSelector((state) => state.pagination.currentPage);
   const articlesQuery = useGetArticlesListQuery({ page: currentPage });
   const navigate = useNavigate();
-  console.log(articlesQuery)
   const [size] = useState<SizeType>('large'); // default is 'middle'
   const [inputValue, setInputValue] = useState('');
   const [text, setText] = useState('');
@@ -46,40 +43,47 @@ function NewArticle() {
   const { setArticleCount } = paginationSlice.actions;
   const { addArticleToStore } = articleSlice.actions;
   const [createArticle] = useCreateArticleMutation();
-  const addTag = (event) => {
-    if ((event.key === 'Enter' || event.type === 'click') && inputValue !== '') {
-      setTags([...tags, inputValue]);
-      setInputValue('');
-    }
-  };
-
-  const deleteTag = (tagToDelete) => {
-    setTags(tags.filter(tag => tag !== tagToDelete));
-  }
 
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<NewArticleForm>();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'tags',
+  });
+
+  const addTag = (event) => {
+    if ((event.key === 'Enter' || event.type === 'click') && inputValue !== '') {
+      append({ value: inputValue });
+      setInputValue('');
+    }
+  };
+
+  const deleteTag = (index) => {
+    remove(index);
+  }
   const onSubmit: SubmitHandler<NewArticleForm> = async (data) => {
     try {
+      const tagList = data.tags.map(tag => tag.value);
       const response = await createArticle({
         title: data.title,
         description: data.description,
         body: data.textArticle,
-        tagList: data.tags,
+        tagList: tagList,
       });
       if (response) {
-        toast.success("Статья успешно создана")
+        toast.success('Статья успешно создана');
         // @ts-ignore
-        dispatch(addArticleToStore(response.data.article))
+        dispatch(addArticleToStore(response.data.article));
         dispatch(setArticleCount(totalCount + 1));
         articlesQuery.refetch();
         navigate('/');
       }
     } catch (err) {
-      toast.error("Произошла ошибка при создании статьи");
+      toast.error('Произошла ошибка при создании статьи');
     }
   };
   const {
@@ -154,20 +158,20 @@ function NewArticle() {
           <div className={makeTags}>
             <h2 className={newArticleFormMiniHeader}>Tags</h2>
             <div className={makeTagsGroup}></div>
-            {tags.map((tag, index) => (
-                <div key={nanoid()} className={tagsGroup}>
+            {fields.map((field, index) => (
+                <div key={field.id} className={tagsGroup}>
                   <input
                       className={tagsGroupInput}
-                      {...register(`tags.${index}`)}
+                      {...register(`tags.${index}.value`)}
                       type="text"
-                      defaultValue={tag}
+                      defaultValue={field.value}
                   />
                   <Popconfirm
                       title="Delete the tag"
                       description="Are you sure to delete this tag?"
                       onConfirm={(e) => {
                         confirm(e);
-                        deleteTag(tag);
+                        deleteTag(index);
                       }}
                       onCancel={cancel}
                       okText="Yes"
@@ -181,12 +185,12 @@ function NewArticle() {
             ))}
             <div className={tagAdd}>
               <input
-                  type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyDown={addTag}
-                  placeholder="Tag"
-                  className={tagsGroupInput}
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={addTag}
+                placeholder="Tag"
+                className={tagsGroupInput}
               />
               <Space wrap>
                 <Button size={size} className={tagAddButton} onClick={addTag}>

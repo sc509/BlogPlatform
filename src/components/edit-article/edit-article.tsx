@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm, useFieldArray } from 'react-hook-form';
 
-import { nanoid } from 'nanoid';
 import { toast } from 'react-toastify';
 
 import styles from '../../components/new-article/new-article.module.scss';
@@ -11,7 +10,8 @@ import type { SizeType } from 'antd/es/config-provider/SizeContext';
 
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { useEditArticleMutation, useGetArticleBySlugQuery } from '../../redux/articleApi.tsx';
+import {useEditArticleMutation, useGetArticleBySlugQuery, useGetArticlesListQuery} from '../../redux/articleApi.tsx';
+import {useAppSelector} from "../../redux/store.ts";
 
 const confirm = (e: React.MouseEvent<HTMLElement>) => {
   message.success('The tag has been successfully removed');
@@ -25,7 +25,7 @@ interface EditArticleForm {
   title: string;
   description: string;
   textArticle: string;
-  tags: string[];
+  tags: { value: string }[];
 }
 
 interface ArticleEditProps {
@@ -34,65 +34,56 @@ interface ArticleEditProps {
 
 function EditArticle() {
   const { slug } = (useParams() as unknown) as ArticleEditProps;
-  const { data, isLoading, isError } = useGetArticleBySlugQuery(slug); 
-  const [tags, setTags] = useState(data ? data.article.tagList : []);
   const [size] = useState<SizeType>('large');
   const [inputValue, setInputValue] = useState('');
   const [text, setText] = useState('');
   const [editArticle] = useEditArticleMutation();
   const navigate = useNavigate();
+  const { data, isLoading, isError } = useGetArticleBySlugQuery(slug);
+  const currentPage = useAppSelector((state) => state.pagination.currentPage);
+  const articlesQuery = useGetArticlesListQuery({ page: currentPage });
   if (text.length < 0) {
     toast.error('Text length must be greater than 0 ');
   }
-  const addTag = async (event) => {
-    if ((event.key === 'Enter' || event.type === 'click') && inputValue !== '') {
-      const updatedTags = [...tags, inputValue];
-      setTags(updatedTags);
-      setInputValue('');
-      try {
-        await editArticle({
-          slug,
-          title: data.article.title,
-          description: data.article.description,
-          body: data.article.body,
-          tagList: updatedTags,
-        });
-      } catch (err) {
-        toast.error('Error when adding a tag.');
-      }
-    }
-  };
-  const deleteTag = async (tagToDelete) => {
-    const updatedTags = tags.filter((tag) => tag !== tagToDelete);
-    setTags(updatedTags);
-    try {
-      await editArticle({
-        slug,
-        title: data.article.title,
-        description: data.article.description,
-        body: data.article.body,
-        tagList: updatedTags,
-      });
-    } catch (err) {
-      toast.error('Error when deleting a tag.');
-    }
-  };
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
-  } = useForm<EditArticleForm>();
+  } = useForm<EditArticleForm>({
+    defaultValues: {
+      title: data?.article.title,
+      description: data?.article.description,
+      textArticle: data?.article.body,
+      tags: data?.article.tagList.map(tag => ({ value: tag })) || [],
+    },
+  });
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'tags',
+  });
+  const addTag = (event) => {
+    if ((event.key === 'Enter' || event.type === 'click') && inputValue !== '') {
+      append({ value: inputValue });
+      setInputValue('');
+    }
+  };
 
+  const deleteTag = (index) => {
+    remove(index);
+  };
   const onSubmit: SubmitHandler<EditArticleForm> = async (data) => {
     try {
+      const tagList = data.tags.map(tag => tag.value);
       const response = await editArticle({
         slug,
         title: data.title,
         description: data.description,
         body: data.textArticle,
-        tagList: data.tags,
+        tagList: tagList,
       });
       if (response) {
+        articlesQuery.refetch();
         navigate('/');
         toast.success('The article has been successfully edited');
       }
@@ -182,25 +173,30 @@ function EditArticle() {
           <div className={makeTags}>
             <h2 className={newArticleFormMiniHeader}>Tags</h2>
             <div className={makeTagsGroup}></div>
-            {tags.map((tag, index) => (
-              <div key={nanoid()} className={tagsGroup}>
-                <input className={tagsGroupInput} {...register(`tags.${index}`)} type="text" defaultValue={tag} />
-                <Popconfirm
-                  title="Delete the tag"
-                  description="Are you sure to delete this tag?"
-                  onConfirm={(e) => {
-                    confirm(e);
-                    deleteTag(tag);
-                  }}
-                  onCancel={cancel}
-                  okText="Yes"
-                  cancelText="No"
-                >
-                  <Button danger className={deleteTagButton}>
-                    Delete
-                  </Button>
-                </Popconfirm>
-              </div>
+            {fields.map((field, index) => (
+                <div key={field.id} className={tagsGroup}>
+                  <input
+                      className={tagsGroupInput}
+                      {...register(`tags.${index}.value`)}
+                      type="text"
+                      defaultValue={field.value}
+                  />
+                  <Popconfirm
+                      title="Delete the tag"
+                      description="Are you sure to delete this tag?"
+                      onConfirm={(e) => {
+                        confirm(e);
+                        deleteTag(index);
+                      }}
+                      onCancel={cancel}
+                      okText="Yes"
+                      cancelText="No"
+                  >
+                    <Button danger className={deleteTagButton}>
+                      Delete
+                    </Button>
+                  </Popconfirm>
+                </div>
             ))}
             <div className={tagAdd}>
               <input

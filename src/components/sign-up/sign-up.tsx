@@ -3,6 +3,7 @@ import styles from './sign-up.module.scss';
 import {useCreateUserMutation} from "../../redux/articleApi.tsx";
 import {toast} from "react-toastify";
 import {Link, useNavigate} from "react-router-dom";
+import ROUTES from "../../Utils/routes.ts";
 
 interface SignUpForm {
   username: string;
@@ -169,7 +170,7 @@ function SignUp() {
           Create
         </button>
         <p className={signUpFormSignIn}>
-          Already have an account? <Link to="/sign-in" className={signUpFormSignInBlue}>Sign In.</Link>
+          Already have an account? <Link to={ROUTES.SIGN_IN} className={signUpFormSignInBlue}>Sign In.</Link>
         </p>
       </form>
     </div>

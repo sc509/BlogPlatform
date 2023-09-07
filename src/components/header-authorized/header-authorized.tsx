@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/store.ts';
 import { actions } from '../../redux/slice/auth-slice.ts';
 import { toast } from 'react-toastify';
 import handleImageError from "../../Utils/handleImageError.ts";
+import ROUTES from "../../Utils/routes.ts";
 
 function HeaderAuthorized() {
   const dispatch = useAppDispatch();
@@ -24,14 +25,14 @@ function HeaderAuthorized() {
     <div className={header}>
       <div className={blockTitle}>
         <h1 className={title}>
-          <Link to="/articles">Realworld Blog</Link>
+          <Link to={ROUTES.HOME}>Realworld Blog</Link>
         </h1>
       </div>
       <div className={authorization}>
-        <Link to="/new-article">
+        <Link to={ROUTES.NEW_ARTICLE}>
           <button className={createArticle}>Create article</button>
         </Link>
-        <Link to="/profile" className={link}>
+        <Link to={ROUTES.PROFILE} className={link}>
           <div className={profile}>
             <p className={profileName}>{userName}</p>
             <img src={image || AccountPhoto} onError={handleImageError} alt="Account Photo" className={profilePhoto} />

@@ -11,6 +11,7 @@ import HeaderAuthorized from '../header-authorized/header-authorized.tsx';
 import EditProfile from '../edit-profile/edit-profile.tsx';
 import NewArticle from '../new-article/new-article.tsx';
 import EditArticle from '../edit-article/edit-article.tsx';
+import ROUTES from "../../Utils/routes.ts";
 
 import { useAppSelector } from '../../redux/store.ts';
 
@@ -25,18 +26,18 @@ function App() {
       <main>
         <section>
           <Routes>
-            <Route path="/" element={<ArticleList />} />
-            <Route path="/articles" element={<ArticleList />} />
-            <Route path="/articles/:slug" element={<SingleArticle />} />
-            <Route path="/sign-up" element={<SignUp />} />
-            <Route path="/sign-in" element={<SignIn />} />
-            <Route path="/profile" element={<EditProfile />}></Route>
+            <Route path={ROUTES.HOME} element={<ArticleList />} />
+            <Route path={ROUTES.ARTICLES} element={<ArticleList />} />
+            <Route path={ROUTES.SINGLE_ARTICLE} element={<SingleArticle />} />
+            <Route path={ROUTES.SIGN_UP} element={<SignUp />} />
+            <Route path={ROUTES.SIGN_IN} element={<SignIn />} />
+            <Route path={ROUTES.PROFILE} element={<EditProfile />}></Route>
             {isUserLoggedIn ? (
-                <Route path="/new-article" element={<NewArticle />} />
+                <Route path={ROUTES.NEW_ARTICLE} element={<NewArticle />} />
             ) : (
-                <Route path="/new-article" element={<Navigate to="/sign-in" replace />} />
+                <Route path={ROUTES.NEW_ARTICLE} element={<Navigate to={ROUTES.SIGN_IN} replace />} />
             )}
-            <Route path="/articles/:slug/edit" element={<EditArticle />}></Route>
+            <Route path={ROUTES.EDIT_ARTICLE} element={<EditArticle />}></Route>
           </Routes>
         </section>
       </main>

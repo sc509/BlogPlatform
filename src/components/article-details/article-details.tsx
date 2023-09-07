@@ -8,6 +8,8 @@ import { Article } from '../../redux/types.ts';
 
 import HeartIcon from "../../Utils/HeartIcon.tsx";
 import formatDate from "../../Utils/form-date.ts";
+import handleImageError from "../../Utils/handleImageError.ts";
+import ROUTES from "../../Utils/routes.ts";
 
 import { nanoid } from 'nanoid';
 import { Button, message, Popconfirm } from 'antd';
@@ -137,7 +139,7 @@ function ArticleDetails() {
                   <p className={articlesSingleDate}>{formatDate(articles.createdAt)}</p>
                 </div>
                 <div className={articlesSingPhoto}>
-                  <img src={articles.author.image} alt="User Avater" className={articlesSingleUserPhoto} />
+                  <img src={articles.author.image} alt="User Avater"  onError={handleImageError} className={articlesSingleUserPhoto} />
                 </div>
               </div>
             </div>
@@ -169,7 +171,7 @@ function ArticleDetails() {
                       Delete
                     </Button>
                   </Popconfirm>
-                  <Link to={`/articles/${slug}/edit`}>
+                  <Link to={ROUTES.EDIT_ARTICLE.replace(':slug', slug)}>
                     <button className={articlesSingleDescriptionEdit}>Edit</button>
                   </Link>
                 </div>

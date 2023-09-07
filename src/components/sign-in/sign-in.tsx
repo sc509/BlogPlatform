@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useLoginUserMutation } from '../../redux/articleApi.tsx';
 import { actions } from "../../redux/slice/auth-slice.ts";
 import { useAppDispatch } from "../../redux/store.ts";
+import ROUTES from "../../Utils/routes.ts";
 
 import Cookies from 'js-cookie';
 
@@ -108,7 +109,7 @@ function SignIn() {
         </button>
         <p className={signInFormSignUp}>
           Don’t have an account?
-          <Link to="/sign-up" className={signInFormSignUpBlue}>
+          <Link to={ROUTES.SIGN_UP} className={signInFormSignUpBlue}>
             {' '}
             Sign Up.
           </Link>

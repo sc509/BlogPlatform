@@ -9,8 +9,10 @@ import { useDeleteLikeMutation, usePutLikeMutation } from "../../redux/articleAp
 import { articleSlice } from "../../redux/slice/article-slice.ts";
 import formatDate from "../../Utils/form-date.ts";
 import HeartIcon from "../../Utils/HeartIcon.tsx";
+import handleImageError from "../../Utils/handleImageError.ts";
 
 import styles from './article-item.module.scss';
+import ROUTES from "../../Utils/routes.ts";
 
 interface ArticleItemProps {
   articles: Article;
@@ -51,7 +53,7 @@ function ArticleItem({ articles, author, slug }: ArticleItemProps) {
       <div className={articleTitleAndAuthor}>
         <div className={articleTitleBlock}>
           <h1 className={articleTitle}>
-            <Link to={`/articles/${articles.slug}`}>{articles.title}</Link>
+            <Link to={ROUTES.SINGLE_ARTICLE.replace(':slug', articles.slug)}>{articles.title}</Link>
           </h1>
           <div className={aritcleLikes}>
             <div
@@ -91,7 +93,7 @@ function ArticleItem({ articles, author, slug }: ArticleItemProps) {
             <p className={articleDate}>{formatDate(articles.createdAt)}</p>
           </div>
           <div className={articlePhoto}>
-            <img src={articles.author.image} alt="User Avater" className={articleUserPhoto} />
+            <img src={articles.author.image} onError={handleImageError} alt="User Avater" className={articleUserPhoto} />
           </div>
         </div>
       </div>
